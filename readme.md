@@ -1,0 +1,1 @@
+A small project that allows you to choose the best photo by choosing step by step from two
