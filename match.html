@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+    <meta charset="utf-8">
+    <link rel = "stylesheet" type = "text / css" href = "jquery.fancybox.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <!-- fancyBox -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <!-- <script src="index.js"></script> -->
+    <title>Document</title>
+</head>
+<style>
+
+
+    .navidaton_button{
+        margin-top: 3rem;
+    }
+    .thumb img {
+        -webkit-filter: grayscale(0);
+        filter: none;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+
+    .thumb img:hover {
+        -webkit-filter: grayscale(1);
+        filter: grayscale(1);
+    }
+    .main {
+        margin-top: 6rem;
+    }
+    .info {
+        margin-top: 6rem;
+    }
+
+    .thumb {
+        padding: 5px;
+    }
+
+</style>
+<body ng-controller="ctrl" >
+
+<main class="main">
+    <div class="container" >
+        <div class="row" >
+            <div class="col-9 shadow-sm p-3 mb-5 bg-white rounded" >
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-6 thumb " ng-repeat="photo in photos">
+
+                        <a data-fancybox="gallery"  href="{{photo[0].path}}"><span class="fancybox-title"asdfsdf> </span>
+                            <img class="img-fluid" src="{{photo[0].pathToThumb}}" alt="{{photo[0].name}}">
+                        </a>
+                        <button type="button"  ng-click="sendWinner(photo[0].name)" class="btn btn-primary">Выбрать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+
+    $('[data-fancybox="gallery"]').fancybox({
+        thumbs : {
+            autoStart : true
+        }
+    });
+    var app = angular.module('myapp', []);
+    app.controller('ctrl', function($scope,$http) {
+
+        $scope.getPhotos = function () {
+
+            $http.get("PhotoMatcher.php?pair=1")
+                .then(
+                    response => {
+                        console.log (response.status);
+                         $scope.photos = response.data;
+                         console.log(response.data);
+                    },
+                    error => {
+                        console.log(error);
+                    });
+
+        }
+        $scope.do =function (){
+            $http.get("PhotoMatcher.php?hasNext=1")
+                .then(
+                    response => {
+                        console.log(response.data);
+                       if (response.data["hasNext"] == false){
+                           var href = "winner.html";
+                           window.location = href;
+                       }
+                       else{
+                           $scope.getPhotos();
+                       }
+                    },
+                    error => {
+                        console.log(error);
+                    });
+        }
+
+        $scope.sendWinner = function(winName){
+            var win = "";
+            if ($scope.photos['one'][0].name == winName){
+                console.log($scope.photos['one'][0].name);
+                win = "left";
+            }
+            else win = "right";
+
+            var winner = {
+                "winner": win,
+            }
+
+            $http({
+                method: 'POST',
+                url: 'PhotoMatcher.php',
+                data: JSON.stringify(winner),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+                .then(
+                    response => {
+                        console.log (response.status);
+                        $scope.do();
+                    },
+                    error => {
+                        console.log(error);
+                    });
+        }
+        $scope.do();
+    });
+
+
+</script>
+</body>

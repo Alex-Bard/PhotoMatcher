@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+    <meta charset="utf-8">
+    <link rel = "stylesheet" type = "text / css" href = "jquery.fancybox.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <!-- fancyBox -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <!-- <script src="index.js"></script> -->
+    <title>Document</title>
+</head>
+<style>
+
+
+    .navidaton_button{
+        margin-top: 3rem;
+    }
+    .thumb img {
+        -webkit-filter: grayscale(0);
+        filter: none;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+
+    .thumb img:hover {
+        -webkit-filter: grayscale(1);
+        filter: grayscale(1);
+    }
+    .main {
+        margin-top: 6rem;
+    }
+    .info {
+        margin-top: 6rem;
+    }
+
+    .thumb {
+        padding: 5px;
+    }
+
+</style>
+<body ng-controller="ctrl" >
+
+<main class="main">
+    <div class="container" >
+        <div class="row" >
+            <h>Первое место!</h>
+            <div class="col-9 shadow-sm p-3 mb-5 bg-white rounded" >
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-6 thumb ">
+
+                        <a data-fancybox="gallery"  href="{{photo.path}}"><span class="fancybox-title"asdfsdf> </span>
+                            <img class="img-fluid" src="{{photo.pathToThumb}}" alt="{{photo.name}}">
+                        </a>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+
+    $('[data-fancybox="gallery"]').fancybox({
+        thumbs : {
+            autoStart : true
+        }
+    });
+    var app = angular.module('myapp', []);
+    app.controller('ctrl', function($scope,$http) {
+
+        $scope.getPhotos = function () {
+
+            $http.get("PhotoMatcher.php?win=1")
+                .then(
+                    response => {
+                        console.log (response.status);
+                        $scope.photo = response.data;
+                        console.log(response.data);
+                    },
+                    error => {
+                        console.log(error);
+                    });
+
+        }
+        $scope.getPhotos();
+    });
+
+
+</script>
+</body>
