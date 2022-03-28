@@ -47,20 +47,86 @@
     .thumb {
         padding: 5px;
     }
+    .two-background-images{
 
+        background-repeat: no-repeat ;
+        background-position: top left, top right;
+        background-size: 50%, 50%;
+        /*width: 385px;*/
+        /*height: 100px;*/
+        border: 1px solid #000000;
+    }
 </style>
 <body ng-controller="ctrl" >
 
-<main class="main">
-    <div class="container" >
-        <div class="row" >
-            <div class="col-9 shadow-sm p-3 mb-5 bg-white rounded" >
-                <div class="row">
-                    <button type="button" ng-click="atFirst()" class="btn btn-primary">Начать с начала</button>
-                    <button type="button" ng-show="hasContinion" ng-click="contition()" class="btn btn-primary">Продолжить</button>
+<main class="main ">
+    <div class="container rounded p-3 mb-2  jumbotron" >
+        <div class="row  " >
+            <div class="rounded p-3 mb-2   " >
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Photo Matcher</h1>
+                    <p class="lead">
+                        A small project that allows you to choose the best photo by choosing step by step from two.
+                        You can start from the beginning or continue the previous session.
+                    </p>
+                    <hr class="my-4">
+<!--                    <button type="button" ng-click="atFirst()" class="btn btn-primary">Начать с начала</button>-->
+<!--                    <button type="button" ng-show="hasContinion" ng-click="contition()" class="btn btn-primary">Продолжить</button>-->
                 </div>
             </div>
         </div>
+
+
+<!--    <div class="two-background-images">-->
+<!--        <p>-->
+<!--            This is some text that will appear ontop of the two background images found on this page.-->
+<!--            You can safely ignore it but it serves the purpose of dummy text and placeholder value.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            This text will allow us to view the background image without having to set the heights of the.-->
+<!--            That will appear ontop of the two background images found on this page. You can safely ignore-->
+<!--            it but it serves the purpose of dummy text and placeholder value.-->
+<!--        </p>-->
+<!--    </div>-->
+
+
+    <div class="container my-5 ">
+        <div class="row">
+            <div class="col-lg-5 col-md-12 mb-4 mb-lg-0" ng-show="hasContinue">
+                <!-- Card -->
+                <div
+                        class="bg-image card shadow-1-strong two-background-images" style="{{backgroundStale}}">
+                    <div class="card-body text-white">
+                        <h5 class="card-title">Continue </h5>
+                        <p class="card-text">
+                            Continue where you left off
+                        </p>
+                        <button type="button" ng-click="continue()" class="btn btn-outline-light">Continue</button>
+                    </div>
+                </div>
+                <!-- Card -->
+            </div>
+
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <!-- Card -->
+                <div
+                        class="card text-white bg-dark"
+
+                >
+                    <div class="card-body">
+                        <h5 class="card-title">At first</h5>
+                        <p class="card-text">
+                            Start from the beginning
+                        </p>
+                        <button type="button" ng-click="atFirst()" class="btn btn-outline-light">At first</button>
+                    </div>
+                </div>
+                <!-- Card -->
+            </div>
+
+
+        </div>
+    </div>
     </div>
 </main>
 <script>
@@ -72,8 +138,58 @@
     });
     var app = angular.module('myapp', []);
     app.controller('ctrl', function($scope,$http) {
+        $scope.backgroundStale = "";
+        $scope.hasContinue = false;
 
-        $scope.hasContinion = false;
+        $scope.getTwoPhotosBackground = function () {
+            $http.get("PhotoMatcher.php?pair=1")
+                .then(
+                    response => {
+                        console.log (response.status);
+                        $scope.photos = response.data;
+                        console.log(response.data);
+                        $scope.backgroundStale = "background-image:url(\"" + response.data['one'][0].path + "\"), url(\"" + response.data['two'][0].path + "\");"
+                    },
+                    error => {
+                        console.log(error);
+                    });
+
+        }
+        $scope.setOnePhotoBackground = function () {
+
+            $http.get("PhotoMatcher.php?win=1")
+                .then(
+                    response => {
+                        console.log (response.status);
+                        $scope.photo = response.data;
+                        console.log(response.data);
+                        $scope.backgroundStale = "background-image:url(\"" + response.data.path + "\");background-size: 100%;"
+                        //$scope.backgroundStale = "{'color':red}";
+                    },
+                    error => {
+                        console.log(error);
+                    });
+
+        }
+
+        $scope.getBackgroundStale =function (){
+            var style = "";
+            $http.get("PhotoMatcher.php?hasNext=1")
+                .then(
+                    response => {
+                        console.log(response.data);
+                        if (response.data["hasNext"] == false){
+                             $scope.setOnePhotoBackground();
+                        }
+                        else{
+                           // $scope.getPhotos();
+                            $scope.getTwoPhotosBackground();
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                    });
+        }
 
         $scope.getSeanse = function() {
             var query = "State.php";
@@ -82,7 +198,7 @@
                     response => {
                         console.log(response.data['state']);
                         if (response.data['state'] == "hasOld"){
-                            $scope.hasContinion = true;
+                            $scope.hasContinue = true;
                         }
                     },
                     error => {
@@ -115,13 +231,14 @@
                 });
         }
 
-        $scope.contition = function() {
+        $scope.continue = function() {
             var href = "match.html";
             window.location = href;
         }
 
 
         $scope.getSeanse();
+        $scope.getBackgroundStale();
     });
 
 
