@@ -51,21 +51,43 @@
 </style>
 <body ng-controller="ctrl" >
 
-<main class="main">
-    <div class="container" >
-        <div class="row" >
-            <h>Первое место!</h>
-            <div class="col-9 shadow-sm p-3 mb-5 bg-white rounded" >
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 col-6 thumb ">
+<!--<main class="main">-->
+<!--    <div class="container" >-->
+<!--        <div class="row" >-->
+<!--            <h>Первое место!</h>-->
+<!--            <div class="col-9 shadow-sm p-3 mb-5 bg-white rounded" >-->
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-4 col-6 thumb ">-->
 
-                        <a data-fancybox="gallery"  href="{{photo.path}}"><span class="fancybox-title"asdfsdf> </span>
-                            <img class="img-fluid" src="{{photo.pathToThumb}}" alt="{{photo.name}}">
-                        </a>
+<!--                        <a data-fancybox="gallery"  href="{{photo.path}}"><span class="fancybox-title"asdfsdf> </span>-->
+<!--                            <img class="img-fluid" src="{{photo.pathToThumb}}" alt="{{photo.name}}">-->
+<!--                        </a>-->
 
-                        </a>
-                    </div>
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+<main class="main ">
+    <div class="container rounded p-3 mb-2  jumbotron" >
+
+            <div class="rounded p-3 mb-2   " >
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4 ">Photo Matcher</h1>
+
+                    <hr class="my-4">
+                    <h   class="lead">First place!</h>
                 </div>
+            </div>
+
+
+        <div class="container my-5 text-center">
+            <div class=" center-block " >
+                <a data-fancybox="gallery"  href="{{photo.path}}"><span class="fancybox-title"asdfsdf> </span>
+                    <img class="img-fluid" src="{{photo.pathToThumb}}" alt="{{photo.name}}">
+                </a>
             </div>
         </div>
     </div>
